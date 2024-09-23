@@ -1,39 +1,75 @@
-//
-//  ContentView.swift
-//  Binary
-//
-//  Created by Luke R. Christopulos on 9/17/24.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State private var baseNumber: Int = 0
-        @State private var baseNumberString: String = "0"
-        var body: some View {
-            VStack {
-                TextField("Enter a number", text: $baseNumberString)
-                    .keyboardType(.numberPad)
-                    .onChange(of: baseNumberString) { newValue in
-                        if let newNumber = Int(newValue) {
-                            baseNumber = newNumber
-                        } else {
-                            baseNumber = 0
+    @State private var baseNumber: String = ""
+    @State private var binaryRepresentation: String = ""
+    @State private var hexRepresentation: String = ""
+    var body: some View {
+            ZStack{
+                RoundedRectangle(cornerRadius: 65)
+                    .stroke(Color.cyan, lineWidth: 15)
+                    .ignoresSafeArea()
+                    .background(
+                        RoundedRectangle(cornerRadius: 60)
+                            .fill(Color.clear)
+                            .ignoresSafeArea()
+                        
+                    )
+                    .shadow(color: Color.blue.opacity(1), radius: 15, x: 0, y: 0)
+                    .ignoresSafeArea()
+                
+                VStack{
+                HStack{
+                    VStack{
+                        Button(action: {
+                            if let number = Int(baseNumber) {
+                                binaryRepresentation = convertToBinary(baseNumber: number)
+                            }
+                        })
+                        {
+                            Text("Convert to Binary")
                         }
+                        .bold()
+                        Text("\(binaryRepresentation)")
+                            .frame(width: 100)
                     }
+                    .padding()
+                    VStack{
+                        Button(action: {
+                            if let number = Int(baseNumber) {
+                                hexRepresentation = convertToHex(baseNumber: number)
+                            }
+                        })
+                        {
+                            Text("Convert to Hex")
+                        }
+                        .bold()
+                        Text("\(hexRepresentation)")
+                    }
+                    .padding()
+                }
+                Spacer()
+                TextField("Enter a number", text: $baseNumber)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                Text("Base Number: \(baseNumber)")
-                    .padding()
-            }
-            .padding()
-            .onAppear {
-                baseNumberString = "\(baseNumber)"
+                    .frame(width: 375)
+                    .bold()
+                    .shadow(color: Color.blue.opacity(0.7), radius: 5, x: 0, y: 0)
+                
+                    
             }
         }
     }
+}
 
-    #Preview {
-        ContentView()
-    }
+func convertToBinary(baseNumber: Int) -> String {
+    return String(baseNumber, radix: 2)
+}
+
+func convertToHex(baseNumber: Int) -> String {
+    return String(baseNumber, radix: 16)
+}
+
+#Preview {
+    ContentView()
+}
